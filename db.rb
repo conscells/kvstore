@@ -11,8 +11,8 @@ class Db
 
   def fetch_val(key, timestamp)
     result = @db.query "select last(value) from #{DB_SERIES} where \"key\"='#{key}' and time < #{timestamp}s"
-    if result.first["values"].first
-      result.first["values"].first["last"]
+    if result.first['values'].first
+      result.first['values'].first['last']
     end
   end
 
