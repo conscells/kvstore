@@ -9,7 +9,13 @@ class Db
   end
 
   def fetch_val(key, timestamp)
-    q = "select last(value) from kv where \"key\"='%{key}' and time <= %{timestamp}s"
+
+    i = Integer(key) rescue key
+    if i.is_a? Integer
+      key = "#{i}"
+    end
+
+    q = "select last(value) from kv where \"key\"=%{key} and time <= %{timestamp}s"
     result = @db.query q, params: { key: key, timestamp: timestamp }
 
     if result.first && result.first['values'].first
