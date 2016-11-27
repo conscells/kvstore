@@ -28,9 +28,6 @@ class KVStore < Sinatra::Application
 
   def write_val(key, val)
     cur_val = fetch_val key, Time.now.to_i
-    puts cur_val
-    puts val
-    puts cur_val == val
     if cur_val != val
       data = {
         values: { value: val },
