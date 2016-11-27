@@ -3,14 +3,15 @@ require 'influxdb'
 class Db
 
   DB_NAME = 'store'
-  DB_SERIES = 'kv'
 
   def initialize
     @db = InfluxDB::Client.new DB_NAME
   end
 
   def fetch_val(key, timestamp)
-    result = @db.query "select last(value) from #{DB_SERIES} where \"key\"='#{key}' and time <= #{timestamp}s"
+    q = "select last(value) from kv where \"key\"=%{key} and time <= %{timestamp}s"
+    result = @db.query q, params: { key: key, timestamp: timestamp }
+
     if result.first['values'].first
       result.first['values'].first['last']
     end
@@ -23,7 +24,7 @@ class Db
         values: { value: val },
         tags: { key: key }
       }
-      @db.write_point(DB_SERIES, data, 's')
+      @db.write_point('kv', data, 's')
     end
   end
 
