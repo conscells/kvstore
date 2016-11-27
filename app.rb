@@ -20,7 +20,10 @@ class KVStore < Sinatra::Application
   end
 
   def fetch_val(key, timestamp)
-    // TODO
+    result = @@db.query "select last(value) from #{@@series} where \"key\"='#{key}' and time < #{timestamp}s"
+    if result.first["values"].first
+      result.first["values"].first["last"]
+    end
   end
 
   def write_val(key, val)
