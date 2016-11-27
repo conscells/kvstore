@@ -9,10 +9,10 @@ class Db
   end
 
   def fetch_val(key, timestamp)
-    q = "select last(value) from kv where \"key\"=%{key} and time <= %{timestamp}s"
+    q = "select last(value) from kv where \"key\"='%{key}' and time <= %{timestamp}s"
     result = @db.query q, params: { key: key, timestamp: timestamp }
 
-    if result.first['values'].first
+    if result.first && result.first['values'].first
       result.first['values'].first['last']
     end
   end
